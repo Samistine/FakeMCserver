@@ -61,9 +61,9 @@ public class Main {
                     Integer.parseInt(prop.getProperty("protocol")),
                     Integer.parseInt(prop.getProperty("max")),
                     Integer.parseInt(prop.getProperty("online")),
+                    new Player[]{},
                     description,
-                    favicon,
-                    new Player[]{}
+                    favicon
             );
         }
 
