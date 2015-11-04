@@ -19,7 +19,7 @@ import me.vemacs.fakemcserver.queries.samistinerest.objects.infoservers.RServer;
 
 public class SamistineQuery implements Response {
 
-    private static final long cacheValidity = 300;
+    private static final long cacheValidity = 300;//300ms
     private static final Cache cache = new Cache();
     private final SamistineRest rest = new SamistineRest();
 
