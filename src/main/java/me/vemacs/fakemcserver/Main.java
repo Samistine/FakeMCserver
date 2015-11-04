@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import static javax.imageio.ImageIO.read;
 import static javax.imageio.ImageIO.write;
+import me.vemacs.fakemcserver.data.Player;
 
 public class Main {
     static Properties prop = new Properties();
@@ -61,7 +62,8 @@ public class Main {
                     Integer.parseInt(prop.getProperty("max")),
                     Integer.parseInt(prop.getProperty("online")),
                     description,
-                    favicon
+                    favicon,
+                    new Player[]{}
             );
         }
 

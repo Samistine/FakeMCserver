@@ -8,9 +8,9 @@ public class StatusResponse {
     Message description;
     public String favicon;
 
-    public StatusResponse(String name, int protocol, int max, int online, Message description, String favicon) {
+    public StatusResponse(String name, int protocol, int max, int online, Player[] sample, Message description, String favicon) {
         this.version = new Version(name, protocol);
-        this.players = new Players(max, online);
+        this.players = new Players(max, online, sample);
         this.description = description;
         this.favicon = favicon;
     }
@@ -28,10 +28,12 @@ public class StatusResponse {
     class Players {
         int max = 9000;
         int online = 420;
+        Player[] sample;
 
-        Players(int max, int online) {
+        Players(int max, int online, Player[] sample) {
             this.max = max;
             this.online = online;
+            this.sample = sample;
         }
     }
 }
