@@ -24,7 +24,7 @@ public class SamistineQuery implements Response {
     private final SamistineRest rest = new SamistineRest();
 
     @Override
-    public StatusResponse getStatusResponse() {
+    public synchronized StatusResponse getStatusResponse() {
         if (cache.isValid()) {
             System.out.println("Returning cached query");
             return (StatusResponse) cache.getCachedObject();
