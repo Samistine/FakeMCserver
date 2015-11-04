@@ -43,7 +43,7 @@ public class HTTPClient {
 
 
         // print result
-        System.out.println(response.toString());
+        //System.out.println(response.toString());
         return response.toString();
 
     }
