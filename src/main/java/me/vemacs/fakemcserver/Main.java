@@ -23,7 +23,7 @@ public class Main {
                 //prop.setProperty("online", Integer.toString(9001));
                 //prop.setProperty("description", "&cBl&baze it\\n&fmaggots");
                 //prop.setProperty("engine", "classic");
-                //prop.store(output, null);
+                prop.store(output, null);
             }
         }
 
