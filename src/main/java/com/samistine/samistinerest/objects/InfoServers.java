@@ -1,6 +1,6 @@
-package me.vemacs.fakemcserver.queries.samistinerest.objects;
+package com.samistine.samistinerest.objects;
 
-import me.vemacs.fakemcserver.queries.samistinerest.objects.infoservers.RExtra;
+import com.samistine.samistinerest.objects.infoservers.RExtra;
 
 /**
  * Created by Samuel on 6/9/2015.

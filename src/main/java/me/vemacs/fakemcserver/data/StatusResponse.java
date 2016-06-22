@@ -1,12 +1,17 @@
 package me.vemacs.fakemcserver.data;
 
 import me.vemacs.fakemcserver.Message;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class StatusResponse {
-    Version version;
-    Players players;
-    Message description;
-    public String favicon;
+
+    static final Logger LOGGER = LogManager.getLogger();
+
+    final Version version;
+    final Players players;
+    final Message description;
+    final String favicon;
 
     public StatusResponse(String name, int protocol, int max, int online, Player[] sample, Message description, String favicon) {
         this.version = new Version(name, protocol);
@@ -15,20 +20,22 @@ public class StatusResponse {
         this.favicon = favicon;
     }
 
-    public class Version {
-        String name = "1.7.9";
-        int protocol = 5;
+    static class Version {
 
-        public Version(String name, int protocol) {
+        final String name;
+        final int protocol;
+
+        Version(String name, int protocol) {
             this.name = name;
             this.protocol = protocol;
         }
     }
 
-    class Players {
-        int max = 9000;
-        int online = 420;
-        Player[] sample;
+    static class Players {
+
+        final int max;
+        final int online;
+        final Player[] sample;
 
         Players(int max, int online, Player[] sample) {
             this.max = max;

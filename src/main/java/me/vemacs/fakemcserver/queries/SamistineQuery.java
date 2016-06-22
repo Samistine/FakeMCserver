@@ -1,90 +1,112 @@
-/*
- * Decompiled with CFR 0_102.
- */
 package me.vemacs.fakemcserver.queries;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.vemacs.fakemcserver.ChatConverter;
-import me.vemacs.fakemcserver.Main;
 import me.vemacs.fakemcserver.Message;
 import me.vemacs.fakemcserver.data.Player;
 import me.vemacs.fakemcserver.data.StatusResponse;
-import me.vemacs.fakemcserver.queries.samistinerest.SamistineRest;
-import me.vemacs.fakemcserver.queries.samistinerest.objects.InfoServers;
-import me.vemacs.fakemcserver.queries.samistinerest.objects.infoservers.RPlayer;
-import me.vemacs.fakemcserver.queries.samistinerest.objects.infoservers.RServer;
+import com.samistine.samistinerest.SamistineRest;
+import com.samistine.samistinerest.objects.InfoServers;
+import com.samistine.samistinerest.objects.infoservers.RServer;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import me.vemacs.fakemcserver.SLPResponder;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
-public class SamistineQuery implements Response {
+public class SamistineQuery implements SLPResponder {
 
-    private static final long cacheValidity = 300;//300ms
-    private static final Cache cache = new Cache();
-    private final SamistineRest rest = new SamistineRest();
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+    private final SamistineRest rest;
+    private final Cache cache;
+
+    String restAPI;
+    long restAPICache;
+    String server_motd;
+    String server_version;
+    int server_onlineplayers;
+    int server_maxplayers;
+    boolean server_SendPlayerSample;
+    int server_protocol;
+    String server_favicon;
+
+    public SamistineQuery() throws IOException {
+
+        File file = new File("SamistineQuery.yml");
+        if (!file.exists()) {
+            Files.copy(ClassLoader.getSystemResourceAsStream("resources/SamistineQuery.yml"), file.toPath());
+        }
+        Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+
+        this.restAPI = config.getString("RestAPI", "http://samistine.com:5001/info/servers");
+        this.restAPICache = config.getLong("CacheValidity", 300);
+        this.server_motd = config.getString("MOTD", "Samistine Network");
+        this.server_version = config.getString("Version", "SamistineRestQuerier");
+        this.server_onlineplayers = config.getInt("OnlinePlayers", -1);
+        this.server_maxplayers = config.getInt("MaxPlayers", -1);
+        this.server_SendPlayerSample = config.getBoolean("SendPlayerSample", true);
+        this.server_protocol = config.getInt("Protocol", -666);
+        this.server_favicon = config.getString("Favicon", null);
+
+        this.rest = new SamistineRest(restAPI);
+        this.cache = new Cache(restAPICache);//in milliseconds
+    }
 
     @Override
-    public synchronized StatusResponse getStatusResponse() {
+    public synchronized StatusResponse getStatusResponse(int protocol) {
         if (cache.isValid()) {
-            System.out.println("Returning cached query");
+            LOGGER.log(Level.INFO, "Returning cached query");
             return (StatusResponse) cache.getCachedObject();
         }
         try {
             InfoServers iservers = rest.doInfoServers();
             if (iservers.success) {
                 StatusResponse response = new StatusResponse(
-                        Main.version,
-                        Main.protocol,
-                        iservers.extra.max_players,
-                        iservers.extra.players_online,
-                        getPlayersForResponse(getAllPlayers(iservers.extra.servers)),
-                        getAsMessage("Samistine Network"),
-                        null);
+                        server_version,
+                        (server_protocol == -2 ? protocol : server_protocol),
+                        (server_maxplayers == -1 ? iservers.extra.max_players : server_maxplayers),
+                        (server_onlineplayers == -1 ? iservers.extra.players_online : server_onlineplayers),
+                        (server_SendPlayerSample ? getAllPlayers(iservers.extra.servers) : null),
+                        getAsMessage(server_motd),
+                        server_favicon);
                 cache.updateCache(response);
                 return response;
             }
-            System.out.println("REST API returned false for 'success'");
+            LOGGER.log(Level.ERROR, "REST API returned false for 'success'");
             return null;
         } catch (Exception ex) {
-            Logger.getLogger(SamistineQuery.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Unable to connect to Samistine REST API");
+            LOGGER.log(Level.ERROR, "Unable to connect to Samistine REST API", ex);
             return null;
         }
     }
 
-    public List<RPlayer> getAllPlayers(List<RServer> servers) {
-        ArrayList<RPlayer> players = new ArrayList<>();
-        for (RServer server : servers) {
-            if (server != null) {
-                for (RPlayer player : server.players) {
-                    if (player != null) {
-                        players.add(player);
-                    }
-                }
-            }
-        }
-        return players;
-    }
-
-    public Player[] getPlayersForResponse(List<RPlayer> playersToConvert) {
-        ArrayList<Player> players = new ArrayList<>(playersToConvert.size());
-        for (RPlayer playerToConvert : playersToConvert) {
-            Player player = new Player(playerToConvert.name, playerToConvert.uuid);
-            players.add(player);
-        }
-        return players.toArray(new Player[players.size()]);
+    public Player[] getAllPlayers(List<RServer> servers) {
+        return servers.stream()
+                .filter(server -> server != null)
+                .map(server -> server.players)
+                .flatMap(players -> players.stream())
+                .map(playerToConvert -> new Player(playerToConvert.name, playerToConvert.uuid))
+                .toArray(size -> new Player[size]);
     }
 
     public Message getAsMessage(String message) {
-        Message classicMsg = new Message();
-        classicMsg.text = ChatConverter.replaceColors(message).replace((CharSequence) "\\n", (CharSequence) "\n");
-        return classicMsg;
+        return new Message(ChatConverter.replaceColors(message).replace((CharSequence) "\\n", (CharSequence) "\n"));
     }
 
     private static class Cache {
 
+        final long cacheValidity;
+
         long validBefore = -1;
         Object cachedObject;
+
+        public Cache(long cacheValidity) {
+            this.cacheValidity = cacheValidity;
+        }
 
         public Object getCachedObject() {
             return this.cachedObject;

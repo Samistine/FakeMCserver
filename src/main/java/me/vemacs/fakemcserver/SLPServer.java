@@ -6,10 +6,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class SLPServer {
-    private int port;
 
-    public SLPServer(int port) {
+    private int port;
+    private SLPResponder responder;
+
+    public SLPServer(int port, SLPResponder responder) {
         this.port = port;
+        this.responder = responder;
     }
 
     public void run() throws Exception {
@@ -22,7 +25,7 @@ public class SLPServer {
                     .childHandler(new ChannelInitializer<Channel>() {
                         @Override
                         public void initChannel(Channel ch) throws Exception {
-                            ch.pipeline().addLast(new BasePacketHandler());
+                            ch.pipeline().addLast(new BasePacketHandler(responder));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

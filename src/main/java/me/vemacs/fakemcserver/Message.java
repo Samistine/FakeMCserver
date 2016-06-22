@@ -3,6 +3,7 @@ package me.vemacs.fakemcserver;
 import java.util.List;
 
 public class Message {
+
     public String text;
 
     public boolean bold;
@@ -18,6 +19,10 @@ public class Message {
 
     public Message() {
 
+    }
+
+    public Message(String text) {
+        this.text = text;
     }
 
     public Message(Message old) {

@@ -29,10 +29,8 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
-
 package me.vemacs.fakemcserver;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.*;
@@ -40,7 +38,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatConverter {
-    private static final Gson gson = new Gson();
     private static final char COLOR_CHAR = '\u00A7';
     private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
     public static final char ESCAPE = '\u00A7';
@@ -127,7 +124,7 @@ public class ChatConverter {
         if (parts.get(0).text.equals(""))
             parts.remove(0); // occasionally empty text?
         Message base = parts.remove(0);
-        if (parts.size() != 0)
+        if (!parts.isEmpty())
             base.extra = new ArrayList<>(parts);
         return base;
     }
@@ -172,14 +169,13 @@ enum Color {
     @SerializedName("white")
     WHITE("f");
 
-    public String code;
+    private final String code;
 
     Color(String code) {
         this.code = code;
     }
 
-
-    private static HashMap<String, Color> codeMap = new HashMap<>();
+    private static final HashMap<String, Color> codeMap = new HashMap<>();
 
     public static Color fromCode(String code) {
         return codeMap.get(code);

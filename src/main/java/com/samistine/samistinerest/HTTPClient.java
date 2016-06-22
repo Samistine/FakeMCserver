@@ -1,4 +1,4 @@
-package me.vemacs.fakemcserver.utils;
+package com.samistine.samistinerest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,7 +9,7 @@ import java.net.URL;
  * Created by Samuel on 6/9/2015.
  */
 public class HTTPClient {
-    private static final String USER_AGENT = "Mozilla/5.0";
+    private static final String USER_AGENT = "SamistineFakeMCServer/1.0";
 
     // HTTP GET request
     public String get(String url) throws Exception {

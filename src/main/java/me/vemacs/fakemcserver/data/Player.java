@@ -2,8 +2,8 @@ package me.vemacs.fakemcserver.data;
 
 public class Player {
 
-    String name;
-    String id;
+    final String name;
+    final String id;
 
     public Player(String name, String uuid) {
         this.name = name;

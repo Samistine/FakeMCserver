@@ -1,4 +1,4 @@
-package me.vemacs.fakemcserver.queries.samistinerest.objects.infoservers;
+package com.samistine.samistinerest.objects.infoservers;
 
 import java.util.List;
 

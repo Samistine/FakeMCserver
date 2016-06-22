@@ -1,0 +1,26 @@
+#Location of rest api
+RestAPI: 'http://samistine.com:5001/info/servers'
+
+#Time in milleseconds to cache rest queries
+CacheValidity: 300
+
+#MOTD to return in queries
+MOTD: 'Samistine Network'
+
+#Version name to return to client, does not impact protocol
+Version: 'SamistineRestQuerier'
+
+#Current players on server, set to -1 to return results from rest api
+OnlinePlayers: -1
+
+#Max players allowed on server, set to -1 to return results from rest api
+MaxPlayers: -1
+
+#Send a list of the players currently online
+SendPlayerSample: true
+
+#Return the protocol version of the server. This will impair clients of differing protocol versions. Set to -2 to return the same protocol sent by the client
+Protocol: -2
+
+#Favicon
+Favicon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlQTFRFAAAAJf75////2NbsRgAAAAF0Uk5TAEDm2GYAAAABYktHRAJmC3xkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIklEQVQ4y2MIBQIGBiRyhAsMFjBYwmOwCAwWMFjCY5AIAACECr9Bn9vi1QAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNi0wNi0yMlQwODoxNToyNiswMjowMDCQht0AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTYtMDYtMjJUMDg6MTU6MjYrMDI6MDBBzT5hAAAAAElFTkSuQmCC'
