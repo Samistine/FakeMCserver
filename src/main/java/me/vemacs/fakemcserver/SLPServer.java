@@ -4,8 +4,16 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import org.apache.logging.log4j.LogManager;
 
 public class SLPServer {
+
+    static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+
+    /* 2:01 PM EST - June 22 2016 */
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a z - MMMM d yyyy");
 
     private int port;
     private SLPResponder responder;
@@ -16,6 +24,7 @@ public class SLPServer {
     }
 
     public void run() throws Exception {
+        LOGGER.info("Server started. Current time is " + Calendar.getInstance());
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
