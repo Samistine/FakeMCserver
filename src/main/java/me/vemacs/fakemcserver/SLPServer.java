@@ -24,7 +24,7 @@ public class SLPServer {
     }
 
     public void run() throws Exception {
-        LOGGER.info("Server started. Current time is " + Calendar.getInstance());
+        LOGGER.info("Server started. Current time is " + dateFormat.format(Calendar.getInstance()));
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
