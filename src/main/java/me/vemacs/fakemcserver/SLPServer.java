@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import org.apache.logging.log4j.LogManager;
 
 public class SLPServer {
@@ -24,6 +25,7 @@ public class SLPServer {
     }
 
     public void run() throws Exception {
+        System.out.println(TimeZone.getDefault());
         LOGGER.info("Server started. Current time is " + dateFormat.format(new Date()));
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
